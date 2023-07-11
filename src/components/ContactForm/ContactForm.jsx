@@ -48,10 +48,9 @@ const ContactForm = () => {
     );
     if (!isContactExist) {
       const newContact = {
-             name,
+        name,
         number,
       };
-      console.log(newContact);
       dispatch(addNewContact(newContact));
     } else {
       window.alert(`${name} is already in contacts`);

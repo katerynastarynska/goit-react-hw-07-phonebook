@@ -2,7 +2,7 @@
   padding-top: 15px;
   padding-bottom: 15px;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
-  color: rgb(13, 85, 167);
+  color: #0d55a7;
   align-items: center;
 }
 .contactListItem {
@@ -11,5 +11,5 @@
 
 .contactListBtn:hover {
   color: #fff;
-  background-color: rgb(13, 85, 167);
+  background-color: #0d55a7;
 }
