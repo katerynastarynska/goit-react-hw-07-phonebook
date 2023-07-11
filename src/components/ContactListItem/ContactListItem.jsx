@@ -1,8 +1,16 @@
 import PropTypes from 'prop-types';
 
 import css from './ContactListItem.module.css';
+import { useDispatch } from 'react-redux';
+import { deleteContact } from 'redux/operations';
 
-export default function ContactListItem({ name, number, id, onDeleteContact }) {
+export default function ContactListItem({ name, number, id }) {
+const dispatch = useDispatch();
+
+  const handleDeleteContact = () => {
+    dispatch(deleteContact(id));
+  }
+
   return (
     <div className={css.contactListItemWrap}>
       <p className={css.contactListText}>
@@ -10,7 +18,7 @@ export default function ContactListItem({ name, number, id, onDeleteContact }) {
       </p>
       <button
         className={css.contactListBtn}
-        onClick={() => onDeleteContact(id)}
+        onClick={() => handleDeleteContact(id)}
       >
         Delete
       </button>
@@ -21,6 +29,6 @@ export default function ContactListItem({ name, number, id, onDeleteContact }) {
 ContactListItem.propTypes = {
   name: PropTypes.string.isRequired,
   number: PropTypes.string.isRequired,
-  onDeleteContact: PropTypes.func.isRequired,
+  // onDeleteContact: PropTypes.func.isRequired,
   id: PropTypes.string.isRequired,
 };

@@ -1,61 +1,48 @@
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { filterContactsByName } from 'redux/FilterSlice';
+import { fetchContacts } from 'redux/operations';
+import { getContacts, getFilterState } from 'redux/selectors';
+
 import ContactForm from './ContactForm/ContactForm';
 import ContactList from './ContactList/ContactList';
 import Filter from './Filter/Filter';
-import { addContact, deleteContact } from 'redux/contacts/ContactsSlice';
-import { useDispatch, useSelector } from 'react-redux';
-import { filterContactsByName } from 'redux/filter/FilterSlice';
 
 const App = () => {
-  const { contacts } = useSelector(state => state.contacts);
-  const filter = useSelector(state => state.filter);
+  const { items, isLoading, error } = useSelector(getContacts);
+  console.log(items);
+
+  const filter = useSelector(getFilterState);
+  console.log(filter);
   const dispatch = useDispatch();
 
-  const handleAddContact = ({ id, name, number }) => {
-    const isContactExist = contacts.some(
-      contact => contact.name.toLowerCase() === name.toLowerCase()
-    );
-
-    if (!isContactExist) {
-      const newContact = {
-        id,
-        name,
-        number,
-      };
-      dispatch(addContact(newContact));
-    } else {
-      window.alert(`${name} is already in contacts`);
-      return;
-    }
-  };
-
-  const handleDeleteContact = contactId => {
-    dispatch(deleteContact(contactId));
-  };
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
 
   const filterContacts = e => {
     dispatch(filterContactsByName(e.currentTarget.value));
   };
 
   const getFilteredContacts = () => {
-    return contacts.filter(contact =>
-      contact.name.toLowerCase().includes(filter.toLowerCase())
+    return items.filter(item =>
+      item.name.toLowerCase().includes(filter.toLowerCase())
     );
   };
 
   const filteredContacts = getFilteredContacts();
+  console.log(filteredContacts);
+
   return (
     <>
       <h1>Phonebook</h1>
-      <ContactForm onSubmit={handleAddContact} />
+      <ContactForm />
       <h2>Contacts</h2>
       <Filter value={filter} onChange={filterContacts} />
+      {isLoading && <p>Loading contacts...</p>}
+      {error && <p>{error}</p>}
 
-      {contacts.length >= 1 && (
-        <ContactList
-          contacts={filteredContacts}
-          onDeleteContact={handleDeleteContact}
-        />
-      )}
+      {items.length >= 1 && <ContactList items={filteredContacts} />}
     </>
   );
 };
