@@ -1,22 +1,11 @@
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchContacts } from 'redux/operations';
-
 import ContactForm from './ContactForm/ContactForm';
 import ContactList from './ContactList/ContactList';
 import Filter from './Filter/Filter';
 import Loader from './Loader/Loader';
-import { selectContacts, selectIsLoading, selectError } from 'redux/selectors';
+import { useFetchContactsQuery } from 'redux/contactsAPI';
 
 const App = () => {
-  const items = useSelector(selectContacts);
-  const isLoading = useSelector(selectIsLoading);
-  const error = useSelector(selectError);
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(fetchContacts());
-  }, [dispatch]);
+  const { data: contacts, isError, isFetching } = useFetchContactsQuery();
 
   return (
     <>
@@ -24,9 +13,9 @@ const App = () => {
       <ContactForm />
       <h2>Contacts</h2>
       <Filter />
-      {isLoading && <Loader />}
-      {error && <p>{error}</p>}
-      {items.length >= 1 && <ContactList />}
+      {isFetching && <Loader />}
+      {isError && <p>Service not available</p>}
+      {contacts && contacts.length >= 1 && <ContactList />}
     </>
   );
 };

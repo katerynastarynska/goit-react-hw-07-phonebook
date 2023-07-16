@@ -1,11 +1,21 @@
 import { useSelector } from 'react-redux';
-import { selectFilteredContacts } from 'redux/selectors';
+import { getFilterState } from 'redux/selectors';
+import { useFetchContactsQuery } from 'redux/contactsAPI';
 
 import ContactListItem from 'components/ContactListItem/ContactListItem';
 import css from './ContactList.module.css';
 
 export default function ContactList() {
-  const filteredContacts = useSelector(selectFilteredContacts);
+  const { data: contacts } = useFetchContactsQuery();
+
+  const filter = useSelector(getFilterState);
+
+  const getFilteredContacts = () => {
+    return contacts.filter(item =>
+      item.name.toLowerCase().includes(filter.toLowerCase())
+    );
+  };
+  const filteredContacts = getFilteredContacts();
 
   return (
     <ul className={css.contactList}>
